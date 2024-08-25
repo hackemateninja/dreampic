@@ -1,0 +1,28 @@
+package ui
+
+type CardProps struct {
+	Src         string
+	Alt         string
+	Title       string
+	Description string
+	ButtonText  string
+	Href        string
+}
+
+templ Card(c CardProps) {
+	<div class="card bg-base-100 image-full w-96 shadow-xl">
+		<figure>
+			<img
+				src={ c.Src }
+				alt={ c.Alt }
+			/>
+		</figure>
+		<div class="card-body">
+			<h2 class="card-title">{ c.Title }</h2>
+			<p>{ c.Description }</p>
+			<div class="card-actions justify-end">
+				<a href={ templ.SafeURL(c.Href) } class="btn btn-primary">{ c.ButtonText }</a>
+			</div>
+		</div>
+	</div>
+}

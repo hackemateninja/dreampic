@@ -1,0 +1,41 @@
+package ui
+
+const (
+	Text     = "text"
+	Email    = "email"
+	Password = "password"
+	Number   = "number"
+	Tel      = "tel"
+	URL      = "url"
+	Date     = "date"
+	Checkbox = "checkbox"
+	Radio    = "radio"
+	Submit   = "submit"
+	Reset    = "reset"
+)
+
+type InputProps struct {
+	IsValid     bool
+	Label       string
+	Placeholder string
+	Name        string
+	Value       string
+	Err         string
+	Type        string
+}
+
+templ Input(i InputProps) {
+	<label class="form-control w-full">
+		<div class="label">
+			<span class="label-text">{ i.Label }</span>
+		</div>
+		if !i.IsValid {
+			<input type={ i.Type } name={ i.Name } value={ i.Value } placeholder={ i.Placeholder } class="input input-bordered border-error w-full"/>
+			<div class="label">
+				<span class="label-text-alt text-error">{ i.Err }</span>
+			</div>
+		} else {
+			<input type={ i.Type } name={ i.Name } value={ i.Value } placeholder={ i.Placeholder } class="input input-bordered w-full"/>
+		}
+	</label>
+}

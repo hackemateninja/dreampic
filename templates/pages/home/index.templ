@@ -1,0 +1,13 @@
+package home
+
+import "dreampic/templates/layouts"
+
+// BodyContent defines HTML content.
+templ Index() {
+	@layouts.App("Dreampic AI", true) {
+		<div hx-get="/api/hello-world" hx-trigger="mouseenter delay:500ms once" hx-target="#result" class="cursor-pointer">
+			[Here Mouse, Mouse!]
+		</div>
+		<div id="result"></div>
+	}
+}

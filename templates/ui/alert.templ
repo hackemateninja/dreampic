@@ -1,0 +1,17 @@
+package ui
+
+templ ErrorAlert(err, recoverURL string) {
+	<a href={ templ.SafeURL(recoverURL) }>
+		<div role="alert" class="alert alert-error">
+			@IconClose()
+			<span>{ err }</span>
+		</div>
+	</a>
+}
+
+templ SuccessAlert(err string) {
+	<div role="alert" class="alert alert-success">
+		@IconCheck()
+		<span>{ err }</span>
+	</div>
+}

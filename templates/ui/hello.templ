@@ -1,0 +1,17 @@
+package ui
+
+templ Hello(name string) {
+	<div>Hello, { name }</div>
+	<p>🎉 Yes, <strong>htmx</strong> is ready to use! (<code>GET /api/hello-world</code>)</p>
+	<button hx-post="/clicked" hx-swap="outerHTML">
+		Click Me
+	</button>
+}
+
+templ SimpleCall() {
+	<div class="flex flex-row justify-around max-w-7xl items-center">
+		<button hx-get="/api/hello-world" hx-target="#result" class="btn btn-primary">Get data</button>
+		<button hx-get="/api/show-ronin" hx-target="#result" class="btn btn-primary">Get data</button>
+	</div>
+	<div id="result"></div>
+}
