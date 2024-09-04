@@ -8,12 +8,31 @@ import (
 	"strings"
 )
 
-func WithUser(next http.Handler) http.Handler {
+func verifyStatic(next http.Handler, w http.ResponseWriter, r *http.Request) {
+	if strings.Contains(r.URL.Path, "/static") {
+		next.ServeHTTP(w, r)
+		return
+	}
+}
+
+func WithAuth(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		if strings.Contains(r.URL.Path, "/static") {
-			next.ServeHTTP(w, r)
+		verifyStatic(next, w, r)
+		user := getAuthenticatedUser(r)
+
+		if !user.LoggedIn {
+			http.Redirect(w, r, "/signin", http.StatusSeeOther)
 			return
 		}
+		next.ServeHTTP(w, r)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
+func WithUser(next http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		verifyStatic(next, w, r)
 
 		cookie, err := r.Cookie("at")
 

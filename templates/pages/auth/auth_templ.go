@@ -171,7 +171,7 @@ func SignInForm(creds supabase.UserCredentials, errors SignInFormErrors) templ.C
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button type=\"submit\" class=\"w-full btn btn-neutral mt-3\">SignIn into your account</button></form>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button type=\"submit\" class=\"w-full btn btn-neutral mt-3\">SignIn into your account</button><div class=\"divider\">OR</div><a href=\"/signin-google\" class=\"btn btn-outline w-full\"><img src=\"/static/images/google.svg\" alt=\"google-logo\" class=\"w-4 h-4\">SignIn with Google</a></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
