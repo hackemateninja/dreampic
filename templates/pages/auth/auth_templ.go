@@ -329,7 +329,7 @@ func CallBackScript() templ.Component {
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<script>\n\t\tvar url = window.location.href;\n\t\tvar newURL = url.replace(\"#\", \"?\")\n\t\twindow.location = newURL\n\t</script>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<script>\r\n\t\tvar url = window.location.href;\r\n\t\tvar newURL = url.replace(\"#\", \"?\")\r\n\t\twindow.location = newURL\r\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

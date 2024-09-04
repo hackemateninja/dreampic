@@ -8,32 +8,21 @@ templ NavBar() {
 			<a href="/" class="text-secondary font-bold text-2xl">DREAMPIC AI</a>
 		</div>
 		<div class="flex-none gap-2">
-			if templates.User(ctx).LoggedIn {
-				<div class="dropdown dropdown-end">
-					<div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-						<div class="w-10 rounded-full">
-							<img
-								alt={ templates.User(ctx).Email }
-								src={ templates.User(ctx).Avatar }
-							/>
-						</div>
-					</div>
-					<ul
-						tabindex="0"
-						class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-					>
-						<li>
-							<a class="justify-between">
-								{ templates.User(ctx).Email }
-							</a>
-						</li>
-						<li><a href="/settings">Settings</a></li>
-						<li><p hx-post="/logout">Logout</p></li>
-					</ul>
-				</div>
-			} else {
-				<a class="btn" href="/signin">Log In</a>
-			}
+			<ul class="menu menu-horizontal px-1">
+				if templates.User(ctx).LoggedIn {
+					<li>
+						<details>
+							<summary>{ templates.User(ctx).Email }</summary>
+							<ul class="bg-base-100 rounded-t-none p-2">
+								<li><a href="/settings">Settings</a></li>
+								<li><p hx-post="/logout">Logout</p></li>
+							</ul>
+						</details>
+					</li>
+				} else {
+					<li><a class="btn" href="/signin">Log In</a></li>
+				}
+			</ul>
 		</div>
 	</div>
 }
