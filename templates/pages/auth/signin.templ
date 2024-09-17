@@ -1,0 +1,62 @@
+package auth
+
+import (
+	"dreampic/templates/layouts"
+	"dreampic/templates/ui"
+	"github.com/nedpals/supabase-go"
+)
+
+type SignInFormErrors struct {
+	Email              string
+	Password           string
+	InvalidCredentials string
+}
+
+templ SignInForm(creds supabase.UserCredentials, errors SignInFormErrors) {
+	if len(errors.InvalidCredentials) > 0 {
+		@ui.ErrorAlert(errors.InvalidCredentials, "/signin")
+	}
+	<form hx-post="/signin" hx-swap="outerHTML" class="flex flex-col justify-around h-full items-center">
+		@ui.Input(ui.InputProps{
+			IsValid:     len(errors.Email) <= 0,
+			Label:       "Email",
+			Placeholder: "example@email.com",
+			Name:        "email",
+			Value:       creds.Email,
+			Err:         errors.Email,
+			Type:        ui.Email,
+		})
+		@ui.Input(ui.InputProps{
+			IsValid:     len(errors.Password) <= 0,
+			Label:       "Password",
+			Placeholder: "your password",
+			Name:        "password",
+			Value:       creds.Password,
+			Err:         errors.Password,
+			Type:        ui.Password,
+		})
+		<button type="submit" class="w-full btn btn-neutral mt-3">
+			SignIn into your account
+		</button>
+		<div class="divider">OR</div>
+		<a href="/signin-google" class="btn btn-outline w-full">
+			<img src="/static/images/google.svg" alt="google-logo" class="w-4 h-4"/>SignIn with Google
+		</a>
+	</form>
+}
+
+templ SignIn() {
+	@layouts.App("Signin", false) {
+		<main class="flex flex-col items-center justify-center p-12 w-full h-[100vh]">
+			<a href="/"><h1 class="card-title mb-3 text-primary-content">DREAMPIC AI</h1></a>
+			<div class="card bg-base-100 shadow-xl max-w-4xl w-full md:flex md:flex-row">
+				@Ilustration()
+				<div class="card-body w-full md:w-[50%]">
+					<h2 class="card-title text-primary-content">Please enter your credentials to continue</h2>
+					@SignInForm(supabase.UserCredentials{}, SignInFormErrors{})
+					<span class="mt-3 text-center"><a class="link" href="/signup">You don't have account yet?</a></span>
+				</div>
+			</div>
+		</main>
+	}
+}

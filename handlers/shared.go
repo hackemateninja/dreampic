@@ -4,10 +4,14 @@ import (
 	"dreampic/types"
 	"log/slog"
 	"net/http"
+	"os"
 
 	"github.com/a-h/templ"
 	"github.com/angelofallars/htmx-go"
+	"github.com/gorilla/sessions"
 )
+
+var SessionEnv = os.Getenv("SESSION_SECRET")
 
 func checkHTMX(w http.ResponseWriter, r *http.Request) {
 	// Check, if the current request has a 'HX-Request' header.
@@ -41,4 +45,10 @@ func Make(h func(w http.ResponseWriter, r *http.Request) error) http.HandlerFunc
 			slog.Error("internal serve error", "err", err, "path", r.URL.Path)
 		}
 	}
+}
+
+func cookieSession(r *http.Request, envKey, cookieName string) (*sessions.Session, error) {
+	store := sessions.NewCookieStore([]byte(envKey))
+
+	return store.Get(r, cookieName)
 }

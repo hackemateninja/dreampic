@@ -1,6 +1,7 @@
 package main
 
 import (
+	"dreampic/db"
 	"dreampic/handlers"
 	"dreampic/pkg/sb"
 	"embed"
@@ -22,6 +23,10 @@ var static embed.FS
 
 func initEverything() error {
 	if err := godotenv.Load(); err != nil {
+		return err
+	}
+
+	if err := db.Init(); err != nil {
 		return err
 	}
 	return sb.Init()
@@ -57,6 +62,7 @@ func runServer() error {
 	// Handle signin page view.
 	router.Get("/signin", handlers.Make(handlers.HandleSignIn))
 	router.Post("/signin", handlers.Make(handlers.HandleSignInCreate))
+	router.Get("/signin-google", handlers.Make(handlers.HandleSignInGoogleCreate))
 
 	router.Get("/signup", handlers.Make(handlers.HandleSignUp))
 	router.Post("/signup", handlers.Make(handlers.HandleSignUpCreate))
@@ -65,7 +71,10 @@ func runServer() error {
 
 	router.Post("/logout", handlers.Make(handlers.HandleLogoutCreate))
 
-	router.Get("/settings", handlers.Make(handlers.HandleSettings))
+	router.Group(func(auth chi.Router) {
+		auth.Use(handlers.WithAuth)
+		auth.Get("/settings", handlers.Make(handlers.HandleSettings))
+	})
 
 	// Create a new server instance with options from environment variables.
 	// For more information, see https://blog.cloudflare.com/the-complete-guide-to-golang-net-http-timeouts/

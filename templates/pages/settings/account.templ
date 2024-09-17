@@ -1,0 +1,12 @@
+package settings
+
+import (
+	"dreampic/templates/layouts"
+	"dreampic/types"
+)
+
+templ AccountPage(user types.AuthenticatedUser) {
+	@layouts.App("Account page", true) {
+		<div class="max-w-2xl w-full mx-auto mt-6">Account</div>
+	}
+}

@@ -1,0 +1,19 @@
+package auth
+
+templ CallBackScript() {
+	<script>
+		var url = window.location.href;
+		var newURL = url.replace("#", "?")
+		window.location = newURL
+	</script>
+}
+
+templ Ilustration() {
+	<figure class="w-[50%] hidden sm:block">
+		<img
+			src="/static/images/batman.webp"
+			alt="Batman"
+			class="object-cover w-full h-full hidden sm:block"
+		/>
+	</figure>
+}

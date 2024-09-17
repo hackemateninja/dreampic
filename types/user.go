@@ -1,5 +1,7 @@
 package types
 
+import "github.com/google/uuid"
+
 // Define a custom type for the context key
 type ContextKey string
 
@@ -7,7 +9,8 @@ type ContextKey string
 const UserContextKey ContextKey = "user"
 
 type AuthenticatedUser struct {
+	ID       uuid.UUID
 	Email    string
-	Avatar   string
 	LoggedIn bool
+	Account
 }

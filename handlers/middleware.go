@@ -6,14 +6,35 @@ import (
 	"dreampic/types"
 	"net/http"
 	"strings"
+
+	"github.com/google/uuid"
 )
+
+func verifyStatic(next http.Handler, w http.ResponseWriter, r *http.Request) {
+	if strings.Contains(r.URL.Path, "/static") {
+		next.ServeHTTP(w, r)
+		return
+	}
+}
+
+func WithAuth(next http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		verifyStatic(next, w, r)
+		user := getAuthenticatedUser(r)
+
+		if !user.LoggedIn {
+			http.Redirect(w, r, "/signin", http.StatusSeeOther)
+			return
+		}
+		next.ServeHTTP(w, r)
+	}
+
+	return http.HandlerFunc(fn)
+}
 
 func WithUser(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		if strings.Contains(r.URL.Path, "/static") {
-			next.ServeHTTP(w, r)
-			return
-		}
+		verifyStatic(next, w, r)
 
 		cookie, err := r.Cookie("at")
 
@@ -30,8 +51,8 @@ func WithUser(next http.Handler) http.Handler {
 		}
 
 		user := types.AuthenticatedUser{
+			ID:       uuid.MustParse(resp.ID),
 			Email:    resp.Email,
-			Avatar:   "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
 			LoggedIn: true,
 		}
 

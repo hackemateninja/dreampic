@@ -16,6 +16,22 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) error {
 	return render(r, w, auth.SignIn())
 }
 
+func HandleSignInGoogleCreate(w http.ResponseWriter, r *http.Request) error {
+
+	resp, err := sb.Client.Auth.SignInWithProvider(supabase.ProviderSignInOptions{
+		Provider:   "google",
+		RedirectTo: "http://localhost:4000/auth/callback",
+	})
+
+	if err != nil {
+		return err
+	}
+
+	http.Redirect(w, r, resp.URL, http.StatusSeeOther)
+
+	return nil
+}
+
 func HandleSignInCreate(w http.ResponseWriter, r *http.Request) error {
 	credentials := supabase.UserCredentials{
 		Email:    r.FormValue("email"),
@@ -41,9 +57,7 @@ func HandleSignInCreate(w http.ResponseWriter, r *http.Request) error {
 
 	setAuthCookie(w, resp.AccessToken)
 
-	htmx.NewResponse().Redirect("/").Write(w)
-
-	return nil
+	return htmx.NewResponse().Redirect("/").Write(w)
 
 }
 
@@ -115,6 +129,15 @@ func setAuthCookie(w http.ResponseWriter, accessToken string) {
 }
 
 func HandleLogoutCreate(w http.ResponseWriter, r *http.Request) error {
+
+	token, err := r.Cookie("at")
+
+	if err != nil {
+		return err
+	}
+
+	sb.Client.Auth.SignOut(r.Context(), token.Value)
+
 	cookie := http.Cookie{
 		Value:    "",
 		Name:     "at",
@@ -126,6 +149,6 @@ func HandleLogoutCreate(w http.ResponseWriter, r *http.Request) error {
 
 	http.SetCookie(w, &cookie)
 
-	htmx.NewResponse().Redirect("/signin").Write(w)
-	return nil
+	return htmx.NewResponse().Redirect("/signin").Write(w)
+
 }
